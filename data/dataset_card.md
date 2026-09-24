@@ -58,7 +58,7 @@ python src/build_sabche_dataset.py --split-file data/split_frozen.csv \
 |---|---|---|
 | books / with Sabche | 266 / 138 | 273 / 195 |
 | spans | 18,845 | 24,378 |
-| length median (p10–p90) | 43 (20–204) | 36 (16–160) |
+| length median (p10-p90) | 43 (20-204) | 36 (16-160) |
 | next span separated only by punctuation | 0.4% | 25.6% |
 | self-overlap / nested | 0 / 0 | 0 / 0 |
 | overlap Chapter, Tsawa, Quotation or Citation | 0.1% | 0.6% |
@@ -168,11 +168,11 @@ as is.
 | test spans (4,079) found verbatim in… | spans | of which < 15 chars |
 |---|---|---|
 | no train book | 3,501 (85.8%) | 140 |
-| 1–2 train books (document-level) | 279 (6.8%) | 55 |
-| 3–9 train books | 119 (2.9%) | 43 |
+| 1-2 train books (document-level) | 279 (6.8%) | 55 |
+| 3-9 train books | 119 (2.9%) | 43 |
 | 10+ train books (stock phrases) | 180 (4.4%) | 144 |
 
-- The 1–2 book overlap is concentrated in the lamrim group: I7D476A8B
+- The 1-2 book overlap is concentrated in the lamrim group: I7D476A8B
   shares 14 headings with train book P000218, and I36A7A668 shares 10 each
   with I54375004 and P000100. The link rule missed these because it only
   counts spans of 40+ characters.
