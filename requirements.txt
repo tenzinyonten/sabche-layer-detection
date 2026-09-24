@@ -1,0 +1,9 @@
+pyyaml>=6.0
+pandas>=2.0
+numpy
+torch>=2.1
+transformers>=4.40
+datasets>=2.18
+huggingface_hub
+tokenizers>=0.15
+tqdm>=4.66

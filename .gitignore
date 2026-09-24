@@ -1,0 +1,8 @@
+runs/
+data/raw_opf/
+sabche_dataset/
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
