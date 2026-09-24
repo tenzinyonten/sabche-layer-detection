@@ -3,10 +3,9 @@
 ## How it is scored
 
 A predicted span is correct when its character IoU with a gold span is at least 0.5, matched
-greedily one to one. Whole-book numbers decode each book once (overlapping windows
-de-duplicated) and are micro-averaged over books. Window-level numbers come from the trainer
-and count a span twice when it falls in two overlapping windows, so use whole-book numbers
-when you compare against other work.
+greedily one to one. Test scores are whole-book: each book is decoded once (overlapping windows
+de-duplicated) and the scores are micro-averaged over books. The validation score is the one
+the trainer logged, per window: the windows overlap, so a heading in the overlap counts twice.
 
 ## Test split (29 books, 4,079 gold spans)
 
@@ -25,17 +24,6 @@ The model predicts 4,144 spans for 4,079 gold. Reproduce without a GPU:
 python src/score_spans.py --split test --per-book \
   --model mmbert-sabche-v1=results/mmbert-sabche-v1/test/spans
 ```
-
-Per window (5,956 gold windows-spans, break penalty 4.0), from
-`results/mmbert-sabche-v1/test_eval_window_level.json`:
-
-| Decoding | F1 | Precision | Recall | Predicted |
-|---|---|---|---|---|
-| Plain argmax | 0.912 | 0.864 | 0.966 | 6,659 |
-| Viterbi | 0.9647 | 0.9629 | 0.9666 | 5,979 |
-
-Viterbi keeps the recall and cuts the false positives from 904 to 222. At stricter IoU the
-window-level F1 is 0.964 at 0.7, 0.960 at 0.9 and 0.844 at exactly 1.0.
 
 ### Per book (whole books)
 
@@ -91,6 +79,8 @@ whole book and not split by batch.
 ## Baseline
 
 The joint multi-label model (all layers in one model), scored on sabche only, gave F1 0.394
-with Viterbi decoding at IoU 0.5 and 0.199 with plain argmax, on its own validation set with
-2,084 gold sabche spans (`layer_detection_model_train`, checkpoint v1.3). It used a different
-validation set, so read it as the size of the gain and not a strict comparison.
+with Viterbi decoding at IoU 0.5 and 0.199 with plain argmax, on its own validation books with
+2,084 gold sabche spans (`layer_detection_model_train`, checkpoint v1.3). It scores each book
+once (windows do not overlap, each is decoded with Viterbi, spans are matched per book), so it
+is close to our whole-book protocol. It used different books, so read it as the size of the
+gain and not a strict comparison.

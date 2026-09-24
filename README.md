@@ -88,32 +88,34 @@ span is correct when its IoU with a gold span is at least 0.5, matched greedily 
 
 | | F1 | Precision | Recall |
 |---|---|---|---|
-| Validation (per window) | 0.867 | 0.882 | 0.852 |
-| Test (per window) | 0.9647 | 0.9629 | 0.9666 |
+| Validation (per window, see below) | 0.867 | 0.882 | 0.852 |
 | Test, whole books (29 books) | 0.962 | 0.954 | 0.970 |
 | Test, old batch (11 books) | 0.958 | 0.940 | 0.977 |
 | Test, new batch (18 books) | 0.964 | 0.964 | 0.965 |
 | Test, median book | 0.979 | | |
 
-Per-window scores count a span twice when it falls in two overlapping windows. The
-whole-book numbers decode each book once and are the ones to quote. Validation was only scored
-per window, and not split by batch. The book-level test numbers can be checked without a
-GPU: `python src/score_spans.py --split test --per-book --model mmbert-sabche-v1=results/mmbert-sabche-v1/test/spans`.
+The test scores are whole-book: each book is decoded once, duplicates from the overlapping
+windows are removed, and the result is scored against the real headings. This is the number to
+quote, and it can be checked without a GPU with
+`python src/score_spans.py --split test --per-book --model mmbert-sabche-v1=results/mmbert-sabche-v1/test/spans`.
+The validation score is the only one the trainer logged, and it is per window. The windows
+overlap, so a heading in the overlap is counted twice. No whole-book validation score was
+recorded, and none is split by batch.
 
 ## 6. Summary
 
 | Model | Score | Notes |
 |---|---|---|
-| Joint multi-label baseline (sabche score only, before per-layer split) | 0.394 F1 | Viterbi, IoU 0.5. Plain argmax gave 0.199. Validation, 2,084 gold sabche spans. |
-| Sabche model, validation, plain argmax | 0.753 F1 | per window |
+| Joint multi-label baseline (sabche score only, before per-layer split) | 0.394 F1 | Viterbi, IoU 0.5, each span counted once. Plain argmax gave 0.199. Its own validation books, 2,084 gold sabche spans. |
+| Sabche model, validation, plain argmax | 0.753 F1 | per window (see section 5) |
 | Sabche model, validation, Viterbi | 0.867 F1 | per window |
-| Sabche model, test, plain argmax | 0.912 F1 | per window |
-| Sabche model, test, Viterbi | **0.9647 F1** | per window |
 | Sabche model, test, whole books | **0.962 F1** | 29 books, P 0.954 / R 0.970 |
 
-The joint baseline is from the joint model's own repo (`layer_detection_model_train`,
-checkpoint v1.3) and used a different validation set, so it shows the size of the gain and
-not a strict comparison.
+The joint baseline comes from the joint model's own repo (`layer_detection_model_train`,
+checkpoint v1.3). It scores each book once: windows do not overlap, each is decoded with
+Viterbi, and the spans are matched per book. So it is close to our whole-book protocol, but it
+was measured on the joint model's own validation books and not on our test books, so read it as
+the size of the gain and not a strict comparison.
 
 ## Layout
 
