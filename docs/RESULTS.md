@@ -76,11 +76,3 @@ At the last epoch (8), scored per window during training with break penalty 5.0:
 That is 4,600 predicted spans for 4,761 gold windows-spans. Validation was not scored per
 whole book and not split by batch.
 
-## Baseline
-
-The joint multi-label model (all layers in one model), scored on sabche only, gave F1 0.394
-with Viterbi decoding at IoU 0.5 and 0.199 with plain argmax, on its own validation books with
-2,084 gold sabche spans (`layer_detection_model_train`, checkpoint v1.3). It scores each book
-once (windows do not overlap, each is decoded with Viterbi, spans are matched per book), so it
-is close to our whole-book protocol. It used different books, so read it as the size of the
-gain and not a strict comparison.

@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-Train mmBERT-base as a BIO token classifier for sabche (label name SABCHE).
+Train mmBERT-base as a BIO token classifier for one layer (tsawa, sabche or chapter). The
+layer is the label name. The 5-label scheme (`multi`) adds a quotation class and is only used
+for tsawa experiments; the final models use plain `bio`.
 
 Usage:
-    python src/train.py --dataset Yontenn/formatting-sabche-v1 --scheme bio \
-        --weight-scheme inv --epochs 8 --evals-per-epoch 4 --patience 3 \
-        --no-grad-checkpointing --skip-test --output-dir runs/sabche
+    python src/train.py --label-name TSAWA --scheme bio --weight-scheme inv \
+        --epochs 15 --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test \
+        --output-dir runs/tsawa
+    python src/train.py --label-name SABCHE --scheme bio --weight-scheme inv --epochs 8 \
+        --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test --output-dir runs/sabche
+    python src/train.py --label-name CHAPTER --scheme bio --weight-scheme sqrt_inv --epochs 8 \
+        --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test --output-dir runs/chapter
 """
 
 from __future__ import annotations
@@ -28,8 +34,10 @@ from transformers import (
 
 NEG = -1.0e9
 
-DEFAULT_DATASET = "Yontenn/formatting-sabche-v1"
-PRIMARY = "SABCHE"
+DEFAULT_DATASETS = {"TSAWA": "Yontenn/formatting-tsawa-v6",
+                    "SABCHE": "Yontenn/formatting-sabche-v1",
+                    "CHAPTER": "Yontenn/formatting-chapter-v1"}
+PRIMARY = "TSAWA"
 SCHEMES: dict = {}
 ENTITIES: dict = {}    # label ids that open / continue each entity type
 
@@ -54,7 +62,7 @@ def configure_label(name: str) -> None:
     })
 
 
-configure_label("SABCHE")
+configure_label("TSAWA")
 
 
 # label conversion
@@ -65,7 +73,7 @@ def convert_row(labels, scheme: str, source_is_multi: bool):
         if not source_is_multi:
             raise SystemExit("--scheme multi needs the 5-label v4 dataset")
         return labels
-    # collapse a 5-label source down to the single layer
+    # collapse a 5-label source down to tsawa-only
     if source_is_multi:
         labels = [0 if x in (3, 4) else x for x in labels]
     if scheme == "bio":
@@ -249,8 +257,8 @@ class WeightedTrainer(Trainer):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--label-name", default="SABCHE",
-                    help="the layer's entity name, e.g. SABCHE; sets the "
+    ap.add_argument("--label-name", default="TSAWA",
+                    help="the layer's entity name, e.g. TSAWA, SABCHE or CHAPTER; sets the "
                          "label names and the default --dataset / --output-dir")
     ap.add_argument("--dataset", default=None,
                     help="local dir or Hugging Face repo; default: the layer's dataset on the Hub "
@@ -288,7 +296,7 @@ def main():
 
     configure_label(args.label_name)
     layer = PRIMARY.lower()
-    args.dataset = args.dataset or DEFAULT_DATASET
+    args.dataset = args.dataset or DEFAULT_DATASETS.get(PRIMARY, f"{layer}/data/{layer}_dataset")
     args.output_dir = args.output_dir or f"runs/{layer}"
     scheme = args.scheme
     names = SCHEMES[scheme]

@@ -134,9 +134,8 @@ Counts are per window, so tokens in overlapping windows count twice.
 ## 5. Training
 
 ```
-python src/train.py --dataset Yontenn/formatting-sabche-v1 --scheme bio \
-    --weight-scheme inv --epochs 8 --evals-per-epoch 4 --patience 3 \
-    --no-grad-checkpointing --skip-test --output-dir runs/sabche
+python src/train.py --label-name SABCHE --scheme bio --weight-scheme inv --epochs 8 \
+    --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test --output-dir runs/sabche
 ```
 
 The reported run used the tsawa training script with the label names in the dataset renamed
