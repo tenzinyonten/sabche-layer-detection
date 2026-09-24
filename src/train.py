@@ -11,7 +11,7 @@ Usage:
     python src/train.py --label-name SABCHE --scheme bio --weight-scheme inv --epochs 8 \
         --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test --output-dir runs/sabche
     python src/train.py --label-name CHAPTER --scheme bio --weight-scheme sqrt_inv --epochs 8 \
-        --evals-per-epoch 4 --patience 3 --no-grad-checkpointing --skip-test --output-dir runs/chapter
+        --evals-per-epoch 4 --patience 3 --skip-test --output-dir runs/chapter
 """
 
 from __future__ import annotations
