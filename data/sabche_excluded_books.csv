@@ -1,0 +1,11 @@
+pecha_id,batch,n_spans,reason,evidence
+I100E7DAD,new,403,under_annotated_body_headings,titled_heading_recall=0.14
+I7A79CC95,new,23,under_annotated_body_headings,titled_heading_recall=0.0
+I82AB29CD,new,8,no_heading_like_spans,heading_rate=0.125
+I9779A606,new,19,under_annotated_body_headings,titled_heading_recall=0.19
+IB8F4E5BE,new,88,under_annotated_body_headings,titled_heading_recall=0.0
+IC3A7006F,new,1,no_heading_like_spans,heading_rate=0.0
+P000016,old,63,offsets_unrecoverable,heading_rate=0.048
+P000017,old,17,offsets_unrecoverable,heading_rate=0.059
+P000031,old,15,under_annotated_body_headings,titled_heading_recall=0.01
+P000226,old,67,offsets_unrecoverable,heading_rate=0.045

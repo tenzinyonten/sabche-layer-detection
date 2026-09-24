@@ -1,0 +1,59 @@
+{
+  "label2id": {
+    "O": 0,
+    "B-SABCHE": 1,
+    "I-SABCHE": 2
+  },
+  "max_length": 8192,
+  "stride": 5120,
+  "tokenizer": "jhu-clsp/mmBERT-base",
+  "windows": {
+    "train": 8886,
+    "validation": 911,
+    "test": 963
+  },
+  "docs": {
+    "train": {
+      "docs": 261,
+      "spans": 35122,
+      "I": 148,
+      "P": 113
+    },
+    "validation": {
+      "docs": 33,
+      "spans": 3091,
+      "I": 23,
+      "P": 10
+    },
+    "test": {
+      "docs": 29,
+      "spans": 4079,
+      "I": 18,
+      "P": 11
+    }
+  },
+  "label_counts": {
+    "train": {
+      "O": 69878137,
+      "B-SABCHE": 53837,
+      "I-SABCHE": 2797816
+    },
+    "validation": {
+      "O": 7190531,
+      "B-SABCHE": 4734,
+      "I-SABCHE": 258495
+    },
+    "test": {
+      "O": 7602369,
+      "B-SABCHE": 5920,
+      "I-SABCHE": 274716
+    }
+  },
+  "class_weights_inverse_freq_train": {
+    "O": 0.3469,
+    "B-SABCHE": 450.3086,
+    "I-SABCHE": 8.6651
+  },
+  "spans_total": 42292,
+  "spans_without_B_token": 0
+}
