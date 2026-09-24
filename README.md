@@ -1,6 +1,6 @@
 # sabche-layer-detection
 
-Finding **sabche** (ས་བཅད, outline headings) in Tibetan commentaries with a fine-tuned
+Finding **sabche** (outline headings) in Tibetan commentaries with a fine-tuned
 `jhu-clsp/mmBERT-base` token classifier. This repo has the whole pipeline: the audit of the
 raw annotations, how the spans were cleaned, how the split was built, how the model was
 trained and how it is scored.
@@ -102,20 +102,6 @@ The validation score is the only one the trainer logged, and it is per window. T
 overlap, so a heading in the overlap is counted twice. No whole-book validation score was
 recorded, and none is split by batch.
 
-## 6. Summary
-
-| Model | Score | Notes |
-|---|---|---|
-| Joint multi-label baseline (sabche score only, before per-layer split) | 0.394 F1 | Viterbi, IoU 0.5, each span counted once. Plain argmax gave 0.199. Its own validation books, 2,084 gold sabche spans. |
-| Sabche model, validation, plain argmax | 0.753 F1 | per window (see section 5) |
-| Sabche model, validation, Viterbi | 0.867 F1 | per window |
-| Sabche model, test, whole books | **0.962 F1** | 29 books, P 0.954 / R 0.970 |
-
-The joint baseline comes from the joint model's own repo (`layer_detection_model_train`,
-checkpoint v1.3). It scores each book once: windows do not overlap, each is decoded with
-Viterbi, and the spans are matched per book. So it is close to our whole-book protocol, but it
-was measured on the joint model's own validation books and not on our test books, so read it as
-the size of the gain and not a strict comparison.
 
 ## Layout
 
