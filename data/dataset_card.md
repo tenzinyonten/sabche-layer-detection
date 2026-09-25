@@ -34,13 +34,22 @@ Split: 83/8.5/8.5 by window count (`sabche_split_frozen.csv`).
 | item | value |
 |---|---|
 | tokenizer | `jhu-clsp/mmBERT-base` (fast, offsets) |
-| window / stride | 8192 (8190 content + CLS/SEP) / 5120 - same as tsawa |
+| window / step | 8192 (8190 content + CLS/SEP) / 5120 between window starts |
 | labels | `O`=0, `B-SABCHE`=1, `I-SABCHE`=2; CLS/SEP/pad = -100 |
 | label rule | token-start rule (`build_tsawa_dataset.label_tokens`) |
 | columns | input_ids, attention_mask, labels, token_start, token_end, char_start, char_end, pecha_id, source_batch, window_index, n_tokens_doc, coverage_pct (no `features` column) |
 | span source | `data/sabche_spans_clean.csv` (dropped=False) |
 | split | `data/split_frozen.csv` (**test frozen**) |
 | metric (for training) | IoU ≥ 0.5, greedy one-to-one, inclusive offsets - same as tsawa/quotation |
+
+**Geometry.** Windows hold 8,192 tokens (8,190 content tokens plus CLS and SEP) and start every
+5,120 tokens, so consecutive windows overlap by 3,070 content tokens. In this card and in the code,
+"stride" means the step between window starts. The Hugging Face tokenizer argument `stride` means the
+overlap, so the equivalent value there is 3,070. Tokens in the overlap are labelled in both windows.
+
+**Offsets.** Span offsets in the cleaned span CSVs and in the dataset columns `char_start` and
+`char_end` use an exclusive end (`text[start:end]`). The prediction files and the scoring code in the
+GitHub repository use an inclusive end (`text[start:end+1]`), so convert with `end - 1`.
 
 ## Pipeline
 
@@ -216,3 +225,18 @@ tokenization).
 - Bare `Nth-པ་ནི།` headings are inconsistently annotated (29%).
 - The re-aligned books rely on an anchor heuristic. 227 spans were dropped
   as unverified, and their true headings are labeled O.
+
+## Citation
+
+```bibtex
+@misc{formatting_sabche,
+  title  = {Formatting Sabche: Tibetan outline-heading (sabche) token classification data},
+  author = {Yontenn},
+  year   = {2026},
+  url    = {https://huggingface.co/datasets/Yontenn/formatting-sabche-v1}
+}
+```
+
+## Acknowledgements
+
+Source texts were digitized and made available by the [Buddhist Digital Resource Center (BDRC)](https://www.bdrc.io/). We gratefully acknowledge BDRC. Annotations were prepared through [OpenPecha](https://openpecha.org/) with support from the [Tsadra Foundation](https://www.tsadra.org/).
