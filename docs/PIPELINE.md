@@ -151,6 +151,17 @@ was not reused. Test is skipped in training and scored once at the end.
 - `src/mmbert_dump_to_chars.py` converts that dump to character offsets per book.
 - `src/score_spans.py` scores offset files against `data/sabche_gold.csv` per book, split by
   batch. This is where the whole-book test numbers come from, and it needs no GPU.
+- `src/mmbert_predict.py` runs a trained model straight over a book's text, with no tokenized dataset, and
+  writes the same per-book offset files that `src/score_spans.py` reads:
+  
+  ```
+  python src/mmbert_predict.py --model Yontenn/mmbert-sabche-v1 --texts-dir data/raw_opf \
+      --books <book ids> --out results/mmbert-sabche-v1/test --break-penalty 4.0
+  ```
+  
+  Use a GPU for whole splits, since a window of 8,192 tokens takes tens of seconds on a CPU. It reproduces
+  the saved predictions closely but not always exactly. The reported scores come from the GPU dump route
+  described above.
 - `src/pred_ordinal_check.py` checks whether predicted spans start on an ordinal as often as
   gold spans do.
 
